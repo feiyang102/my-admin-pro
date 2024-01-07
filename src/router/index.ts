@@ -24,7 +24,6 @@ export const aboutRouter = {
 const modules: Record<string, any> = import.meta.glob("./modules/*.ts", {
     eager: true,
 });
-
 // 路由配置
 const routes: Array<RouteRecordRaw> = [];
 Object.keys(modules).forEach((key) => {
@@ -44,7 +43,7 @@ router.beforeEach(async (_to, _from, next) => {
     next();
 });
 
-router.afterEach((_to) => {
+router.afterEach(() => {
     NProgress.done();
 });
 

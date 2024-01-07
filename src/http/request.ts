@@ -7,7 +7,7 @@ import axios, {
 import { ElMessage } from "element-plus";
 import { getMessageInfo } from "./status";
 
-interface BaseResponse<T = any> {
+interface BaseResponse<T> {
     code: number | string;
     message: string;
     data: T;
@@ -39,7 +39,7 @@ service.interceptors.response.use(
         });
         return response.data;
     },
-    (error: any) => {
+    (error) => {
         const { response } = error;
         if (response) {
             ElMessage({
@@ -57,12 +57,12 @@ service.interceptors.response.use(
 
 // 此处相当于二次响应拦截
 // 为响应数据进行定制化处理
-const requestInstance = <T = any>(config: AxiosRequestConfig): Promise<T> => {
+const requestInstance = <T>(config: AxiosRequestConfig): Promise<T> => {
     const conf = config;
     return new Promise((resolve, reject) => {
         service
-            .request<any, AxiosResponse<BaseResponse>>(conf)
-            .then((res: AxiosResponse<BaseResponse>) => {
+            .request<T, AxiosResponse<BaseResponse<T>>>(conf)
+            .then((res: AxiosResponse<BaseResponse<T>>) => {
                 const data = res.data;
                 // 如果data.code为错误代码返回message信息
                 if (data.code != 0) {
@@ -84,7 +84,7 @@ const requestInstance = <T = any>(config: AxiosRequestConfig): Promise<T> => {
 };
 
 // 在最后使用封装过的axios导出不同的请求方式
-export function get<T = any, U = any>(
+export function get<T, U>(
     config: AxiosRequestConfig,
     url: string,
     parms?: U
@@ -92,7 +92,7 @@ export function get<T = any, U = any>(
     return requestInstance({ ...config, url, method: "GET", params: parms });
 }
 
-export function post<T = any, U = any>(
+export function post<T, U>(
     config: AxiosRequestConfig,
     url: string,
     data: U
@@ -100,7 +100,7 @@ export function post<T = any, U = any>(
     return requestInstance({ ...config, url, method: "POST", data: data });
 }
 
-export function put<T = any, U = any>(
+export function put<T, U>(
     config: AxiosRequestConfig,
     url: string,
     data: U
@@ -108,7 +108,7 @@ export function put<T = any, U = any>(
     return requestInstance({ ...config, url, method: "PUT", data: data });
 }
 
-export function del<T = any, U = any>(
+export function del<T, U>(
     config: AxiosRequestConfig,
     url: string,
     data: U
