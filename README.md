@@ -4,4 +4,5 @@
 ```bash
 pnpm run prepare
 pnpm run lint:lint-staged
+pnpx husky add .husky/commit-msg "npx --no-install commitlint --edit $1"
 ```
