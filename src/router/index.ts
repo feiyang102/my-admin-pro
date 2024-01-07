@@ -13,38 +13,38 @@ import NProgress from "nprogress";
 
 // 功能路由
 export const aboutRouter = {
-    path: "/about",
-    name: "about",
-    component: () => import("@/views/about/index.vue"),
-    meta: {},
-    children: [],
+  path: "/about",
+  name: "about",
+  component: () => import("@/views/about/index.vue"),
+  meta: {},
+  children: [],
 } as RouteRecordRaw;
 
 // 业务路由
 const modules: Record<string, any> = import.meta.glob("./modules/*.ts", {
-    eager: true,
+  eager: true,
 });
 // 路由配置
 const routes: Array<RouteRecordRaw> = [];
 Object.keys(modules).forEach((key) => {
-    const module = modules[key].default;
-    routes.push(module);
+  const module = modules[key].default;
+  routes.push(module);
 });
 routes.push(aboutRouter);
 
 const router = createRouter({
-    history: createWebHashHistory(),
-    routes,
+  history: createWebHashHistory(),
+  routes,
 });
 
 router.beforeEach(async (_to, _from, next) => {
-    //TODO 加载进度条未调试
-    NProgress.start();
-    next();
+  //TODO 加载进度条未调试
+  NProgress.start();
+  next();
 });
 
 router.afterEach(() => {
-    NProgress.done();
+  NProgress.done();
 });
 
 export default router;
