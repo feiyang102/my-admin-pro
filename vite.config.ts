@@ -4,6 +4,12 @@ import { fileURLToPath } from "url";
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 import { viteMockServe } from "vite-plugin-mock";
+import AutoImport from "unplugin-auto-import/vite";
+import Icons from "unplugin-icons/vite";
+import Components from "unplugin-vue-components/vite";
+import IconsResolver from "unplugin-icons/resolver";
+import ElementPlus from "unplugin-element-plus/vite";
+import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
   // 获取当前工作目录
@@ -27,11 +33,37 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         mockPath: "mock", // 数据模拟需要拦截的请求起始 URL
         enable: true, // 本地开发是否启用
       }),
+      // 开启ElementPlus自动引入CSS
+      ElementPlus({}),
+      // 自动导入组件
+      AutoImport({
+        // 定义需要自动引入的框架
+        imports: ["vue", "vue-router", "pinia"],
+        // 处理eslint
+        eslintrc: {
+          enabled: true,
+        },
+        resolvers: [ElementPlusResolver(), IconsResolver()],
+        dts: fileURLToPath(
+          new URL("./types/auto-imports.d.ts", import.meta.url),
+        ),
+      }),
+      // 自动注册组件
+      Components({
+        resolvers: [ElementPlusResolver(), IconsResolver()],
+        dts: fileURLToPath(new URL("./types/components.d.ts", import.meta.url)),
+        dirs: [
+          fileURLToPath(new URL("./src/components/auto", import.meta.url)),
+        ],
+      }),
+      Icons({
+        autoInstall: true,
+      }),
     ],
     // 运行后本地预览的服务器
     server: {
       // 是否开启https
-      https: false,
+      // https: false,
       // 指定服务器应该监听哪个 IP 地址。 如果将此设置为 0.0.0.0 或者 true 将监听所有地址，包括局域网和公网地址。
       host: true,
       // 开发环境预览服务器端口
