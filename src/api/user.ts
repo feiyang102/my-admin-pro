@@ -18,9 +18,11 @@ export type LoginResponse = {
 
 // 定义的接口
 export const userLogin = async (data?: LoginRequest) => {
-  return post<LoginResponse, any>({}, "/login", data);
+  // return post<LoginResponse, any>({}, "/login", data);
+  return post<LoginResponse>("/login", data);
 };
 
 export const refreshUserInfo = async (data?: reLoginRequest) => {
-  return post<LoginResponse, any>({}, "/getUserInfo", data);
+  // return post<LoginResponse, any>({}, "/getUserInfo", data);
+  return post<LoginResponse>("/getUserInfo", data);
 };

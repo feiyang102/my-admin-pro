@@ -25,7 +25,7 @@ export interface ILoginRequest {
 
 export const useUserStoreHook = defineStore("userInfo", {
   state: (): IUserState => ({
-    username: "飞扬",
+    username: "",
     accessToken: "",
     roles: ["common"],
   }),
@@ -33,18 +33,22 @@ export const useUserStoreHook = defineStore("userInfo", {
   actions: {
     storeUserLogin(data: ILoginRequest) {
       return userLogin(data).then((res) => {
-        this.username = res.username;
-        this.roles = res.roles;
-        this.accessToken = res.accessToken;
+        const data = res.data;
+        this.username = data.username;
+        this.roles = data.roles;
+        this.accessToken = data.accessToken;
+        return data;
       });
     },
     storeRefreshUserInfo() {
       if (this.username == "飞扬" && this.accessToken != "") {
         refreshUserInfo({ accessToken: this.accessToken })
           .then((res) => {
-            this.username = res.username;
-            this.roles = res.roles;
-            this.accessToken = res.accessToken;
+            const data = res.data;
+            this.username = data.username;
+            this.roles = data.roles;
+            this.accessToken = data.accessToken;
+            return data;
           })
           .catch(() => {
             this.accessToken = "";
