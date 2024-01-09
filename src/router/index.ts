@@ -37,7 +37,16 @@ const router = createRouter({
   routes,
 });
 
+// 不需要登录的页面
+const noStatusPage = ["/login", "/about"];
 router.beforeEach(async (_to, _from, next) => {
+  const token = sessionStorage.getItem("userInfo");
+  const userIsLogin = token ? true : false;
+  if (userIsLogin || noStatusPage.includes(_to.path)) {
+    next();
+  } else {
+    next("/login");
+  }
   //TODO 加载进度条未调试
   NProgress.start();
   next();

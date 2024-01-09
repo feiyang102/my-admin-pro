@@ -59,7 +59,7 @@ export const useUserStoreHook = defineStore("userInfo", {
   persist: {
     key: "userInfo",
     storage: sessionStorage,
-    paths: ["accessToken"],
+    paths: ["accessToken", "username"],
   },
 });
 
