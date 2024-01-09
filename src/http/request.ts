@@ -3,7 +3,7 @@ import axios, {
   AxiosResponse,
   InternalAxiosRequestConfig,
   Method,
-  // AxiosRequestConfig,
+  AxiosRequestConfig,
   // AxiosInstance,
 } from "axios";
 import { ElMessage } from "element-plus";
@@ -15,30 +15,26 @@ import { getMessageInfo } from "./status";
 //   data: T;
 // }
 
-interface IServiceOptions {
+export interface IServiceOptions {
   url: string;
   method: Method;
   params?: any;
   data?: any;
-  mock?: boolean; // 是否在该请求中使用 Mock Api？
+  mock?: boolean; // 是否在该请求中使用 Mock Api
 }
 
 const instance = axios.create({
   // baseURL: import.meta.env.VITE_APP_BASE_API,
-  baseURL: import.meta.env.VITE_APP_DEV_USE_MOCK
-    ? import.meta.env.VITE_APP_MOCK_BASEURL
-    : import.meta.env.VITE_APP_API_BASEURL,
+  baseURL:
+    import.meta.env.VITE_APP_DEV_USE_MOCK === "true"
+      ? import.meta.env.VITE_APP_MOCK_BASEURL
+      : import.meta.env.VITE_APP_API_BASEURL,
   timeout: 15000,
 });
 
 // 请求拦截器
 instance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // TODO mock 判断，baseUrl 处理
-    console.log("TODO Mock支持全局和局部控制: ", import.meta.env);
-    // import.meta.env
-    // const { mock } = config;
-    // if(mock && import.meta.env)
     return config;
   },
   (error: AxiosError) => {
@@ -83,86 +79,34 @@ instance.interceptors.response.use(
   },
 );
 
-// 对请求进一步处理
-export function service<T>(
-  options: IServiceOptions,
-): Promise<AxiosResponse<T, any>> {
-  return instance(options);
+// 对请求进一步处理，T 为返回值 data 的类型
+function request<T>(options: IServiceOptions): Promise<AxiosResponse<T, any>> {
+  const config = {
+    url: options.url,
+    method: options.method,
+  } as AxiosRequestConfig;
+
+  // 局部 mock 开关的优先级高于全局 mock 开关，只有本地开发可以使用 mock
+  if (options.mock && import.meta.env.MODE == "development") {
+    config.baseURL = import.meta.env.VITE_APP_MOCK_BASEURL;
+  }
+  return instance(config);
 }
 
-export function get<T>(url: string, data: any) {
+// mock 可以控制当前请求是否使用 mock api
+// export function get<T>(url: string, data: any, mock: boolean = false) : Promise<AxiosResponse<T, any>>;
+export function get<T>(url: string, data: any, mock: boolean = false) {
   const params = data;
-  return service<T>({ method: "get", url, params });
+  return request<T>({ method: "get", url, params, mock });
 }
-export function post<T>(url: string, data: any) {
-  return service<T>({ method: "post", url, data });
+export function post<T>(url: string, data: any, mock: boolean = false) {
+  return request<T>({ method: "post", url, data, mock });
 }
-export function put<T>(url: string, data: any) {
-  return service<T>({ method: "put", url, data });
+export function put<T>(url: string, data: any, mock: boolean = false) {
+  return request<T>({ method: "put", url, data, mock });
 }
-export function del<T>(url: string, data: any) {
-  return service<T>({ method: "delete", url, data });
+export function del<T>(url: string, data: any, mock: boolean = false) {
+  return request<T>({ method: "delete", url, data, mock });
 }
 
-// // 此处相当于二次响应拦截
-// // 为响应数据进行定制化处理
-// const requestInstance = <T>(config: AxiosRequestConfig): Promise<T> => {
-//   const conf = config;
-//   return new Promise((resolve, reject) => {
-//     service
-//       .request<T, AxiosResponse<IBaseResponse<T>>>(conf)
-//       .then((res: AxiosResponse<IBaseResponse<T>>) => {
-//         const data = res.data;
-//         // 如果data.code为错误代码返回message信息
-//         if (data.code != 0) {
-//           ElMessage({
-//             message: data.message,
-//             type: "error",
-//           });
-//           reject(data.message);
-//         } else {
-//           ElMessage({
-//             message: data.message,
-//             type: "success",
-//           });
-//           // 此处返回data信息 也就是 api 中配置好的 Response类型
-//           resolve(data.data as T);
-//         }
-//       });
-//   });
-// };
-
-// // 在最后使用封装过的axios导出不同的请求方式
-// export function get<T, U>(
-//   config: AxiosRequestConfig,
-//   url: string,
-//   parms?: U,
-// ): Promise<T> {
-//   return requestInstance({ ...config, url, method: "GET", params: parms });
-// }
-
-// export function post<T, U>(
-//   config: AxiosRequestConfig,
-//   url: string,
-//   data: U,
-// ): Promise<T> {
-//   return requestInstance({ ...config, url, method: "POST", data: data });
-// }
-
-// export function put<T, U>(
-//   config: AxiosRequestConfig,
-//   url: string,
-//   data: U,
-// ): Promise<T> {
-//   return requestInstance({ ...config, url, method: "PUT", data: data });
-// }
-
-// export function del<T, U>(
-//   config: AxiosRequestConfig,
-//   url: string,
-//   data: U,
-// ): Promise<T> {
-//   return requestInstance({ ...config, url, method: "DELETE", data: data });
-// }
-
-export { service as default, IServiceOptions };
+export default request;
