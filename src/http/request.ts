@@ -84,6 +84,8 @@ function request<T>(options: IServiceOptions): Promise<AxiosResponse<T, any>> {
   const config = {
     url: options.url,
     method: options.method,
+    data: options.data ?? {},
+    params: options.params ?? {},
   } as AxiosRequestConfig;
 
   // 局部 mock 开关的优先级高于全局 mock 开关，只有本地开发可以使用 mock
