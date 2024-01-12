@@ -49,7 +49,6 @@ router.beforeEach(async (_to, _from, next) => {
   }
   //TODO 加载进度条未调试
   NProgress.start();
-  next();
 });
 
 router.afterEach(() => {
