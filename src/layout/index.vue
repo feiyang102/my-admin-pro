@@ -5,13 +5,7 @@
     </el-header>
     <el-container>
       <el-aside width="200px">
-        <el-menu
-          :default-active="activePath"
-          class="layout_menu"
-          @open="handleOpen"
-          @close="handleClose"
-          router
-        >
+        <el-menu :default-active="activePath" class="layout_menu" router>
           <el-menu-item
             v-for="item in menuList"
             :index="item.path"
@@ -26,7 +20,7 @@
           </el-sub-menu> -->
         </el-menu>
       </el-aside>
-      <el-main>
+      <el-main class="layout_main">
         <router-view></router-view>
       </el-main>
     </el-container>
@@ -44,9 +38,6 @@ const menuList = router.getRoutes().filter((item) => {
   return item.meta.isShow;
 });
 const activePath = route.path;
-
-const handleOpen = function () {};
-const handleClose = function () {};
 </script>
 
 <style scoped lang="less">
@@ -54,7 +45,8 @@ const handleClose = function () {};
   padding: 0;
   margin-bottom: 5px;
 }
-.layout_menu {
+.layout_menu,
+.layout_main {
   height: calc(100vh - 65px);
 }
 </style>
