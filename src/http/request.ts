@@ -92,12 +92,13 @@ function request<T>(options: IServiceOptions): Promise<AxiosResponse<T, any>> {
   if (options.mock && import.meta.env.MODE == "development") {
     config.baseURL = import.meta.env.VITE_APP_MOCK_BASEURL;
   }
-  return instance(config);
+  return instance<T>(config);
 }
 
 // mock 可以控制当前请求是否使用 mock api
 // export function get<T>(url: string, data: any, mock: boolean = false) : Promise<AxiosResponse<T, any>>;
 export function get<T>(url: string, data: any, mock: boolean = false) {
+  // TODO instance.get<T>(url, config)
   const params = data;
   return request<T>({ method: "get", url, params, mock });
 }

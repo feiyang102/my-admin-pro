@@ -10,7 +10,17 @@ export default {
       name: "HomePage",
       component: () => import("@/views/home/index.vue"),
       meta: {
-        title: "首页",
+        title: "默认首页",
+        isShow: true,
+      },
+      children: [],
+    },
+    {
+      path: "/project",
+      name: "ProjectPage",
+      component: () => import("@/views/project/index.vue"),
+      meta: {
+        title: "项目模块",
         isShow: true,
       },
       children: [],
