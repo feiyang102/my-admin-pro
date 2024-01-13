@@ -34,7 +34,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         enable: true, // 本地开发是否启用
       }),
       // 开启ElementPlus自动引入CSS
-      ElementPlus({}),
+      ElementPlus({ defaultLocale: "zh-cn" }),
       // 自动导入组件
       AutoImport({
         // 定义需要自动引入的框架
