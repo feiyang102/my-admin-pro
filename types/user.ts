@@ -1,3 +1,5 @@
+import { IPaginationQuery } from "#/common";
+
 export type LoginRequest = {
   username: string;
   password: string;
@@ -26,7 +28,7 @@ export interface IUserListItem {
   roles: IUserItem[];
 }
 
-export interface IUserQuery {
+export interface IUserQuery extends IPaginationQuery {
   nickName: string;
-  roleId: number;
+  roleId: number | string;
 }

@@ -2,11 +2,7 @@
   <div class="user_header">
     <el-form inline :model="queryData">
       <el-form-item label="用户名称">
-        <el-input
-          v-model="queryData.nickName"
-          placeholder="请输入用户名称"
-          clearable
-        />
+        <el-input v-model="queryData.nickName" placeholder="请输入用户名称" />
       </el-form-item>
       <el-form-item label="用户角色">
         <el-select v-model="queryData.roleId" placeholder="请选择用户角色">
@@ -45,7 +41,17 @@
       </el-table-column>
     </el-table>
   </div>
-  <div class="user_pagination">pagination</div>
+  <div class="user_pagination">
+    <el-pagination
+      background
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="pagerTotal"
+      :page-size="queryData.pageSize"
+      :page-sizes="[5, 10, 20, 50]"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -59,15 +65,11 @@ const rolesData = ref<IRoleListItem[]>([]);
 const queryData = reactive<IUserQuery>({
   nickName: "",
   roleId: 0,
+  pageNumber: 1,
+  pageSize: 10,
 });
+let pagerTotal = 0;
 const tableData = ref<IUserListItem[]>([]);
-
-const getUserList = async (query = {}) => {
-  const { data }: any = await userList(query).catch((err) => {
-    console.log(err);
-  });
-  tableData.value = data;
-};
 
 const getRoleList = async () => {
   const { data }: any = await roleList({}).catch((err) => {
@@ -76,9 +78,35 @@ const getRoleList = async () => {
   rolesData.value = data;
 };
 
-const handleSearch = () => {
-  const query = { ...queryData };
-  getUserList(query);
+const handleSearch = async () => {
+  const { nickName, roleId } = queryData;
+  const query = {
+    pageNumber: queryData.pageNumber,
+    pageSize: queryData.pageSize,
+  } as IUserQuery;
+  if (nickName) {
+    query.nickName = nickName;
+  }
+  if (roleId !== "0") {
+    query.roleId = Number(roleId);
+  }
+  const { data }: any = await userList(query).catch((err) => {
+    console.log(err);
+  });
+  tableData.value = data.list;
+  pagerTotal = data.total;
+};
+
+const handleSizeChange = (size: number) => {
+  queryData.pageNumber = 1;
+  queryData.pageSize = size;
+  pagerTotal = 0;
+  handleSearch();
+};
+
+const handleCurrentChange = (index) => {
+  queryData.pageNumber = index;
+  handleSearch();
 };
 
 const handleEdit = (user) => {
@@ -86,7 +114,7 @@ const handleEdit = (user) => {
 };
 
 onMounted(async () => {
-  await getUserList();
+  await handleSearch();
   await getRoleList();
 });
 </script>

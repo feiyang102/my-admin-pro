@@ -1,3 +1,5 @@
+import { IUserQuery } from "#/user";
+import { pagerUtil } from "@/utils";
 import { MockMethod } from "vite-plugin-mock";
 
 const STATIC_USER_LIST = [
@@ -187,13 +189,42 @@ export default [
     method: "get",
     // 使用 body 可以获取请求体
     response: ({ query }) => {
-      //TODO 筛选功能
-      //TODO 分页功能
-      console.log("-----", query);
+      const {
+        pageNumber,
+        pageSize,
+        nickName = "",
+        roleId = "0",
+      } = query as IUserQuery;
+      // 筛选功能
+      let list = STATIC_USER_LIST;
+      if (nickName) {
+        list = list.filter((item) => item.nickName.indexOf(nickName) >= 0);
+      }
+      if (roleId && roleId != "0") {
+        const role = Number(roleId);
+        list = list.filter((item) => {
+          for (let i = 0; i < item.roles.length; i++) {
+            if (item.roles[i]["role"] === role) {
+              return true;
+            }
+          }
+        });
+      }
+
+      // 分页功能
+      const total = list.length;
+      // 分页
+      const { beginIndex, endIndex } = pagerUtil(pageNumber, pageSize);
+      console.log(`begin: ${beginIndex}, end: ${endIndex}`);
+
+      list = list.slice(beginIndex, endIndex);
       return {
         code: 0,
         message: "success",
-        data: STATIC_USER_LIST,
+        data: {
+          list: list,
+          total,
+        },
       };
     },
   },
