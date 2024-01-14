@@ -27,6 +27,7 @@ module.exports = {
         "workflow",
         "types",
         "release",
+        "temp",
       ],
     ],
   },

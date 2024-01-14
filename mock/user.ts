@@ -1,4 +1,141 @@
 import { MockMethod } from "vite-plugin-mock";
+
+const STATIC_USER_LIST = [
+  {
+    id: 1,
+    nickName: "许九",
+    roles: [{ role: 2, roleName: "普通用户" }],
+  },
+  {
+    id: 2,
+    nickName: "刘八",
+    roles: [{ role: 2, roleName: "普通用户" }],
+  },
+  {
+    id: 3,
+    nickName: "赵六",
+    roles: [
+      { role: 1, roleName: "管理员" },
+      { role: 2, roleName: "普通用户" },
+    ],
+  },
+  {
+    id: 4,
+    nickName: "王五",
+    roles: [{ role: 2, roleName: "普通用户" }],
+  },
+  {
+    id: 5,
+    nickName: "许九",
+    roles: [
+      { role: 1, roleName: "管理员" },
+      { role: 2, roleName: "普通用户" },
+    ],
+  },
+  {
+    id: 6,
+    nickName: "赵六",
+    roles: [{ role: 2, roleName: "普通用户" }],
+  },
+  {
+    id: 7,
+    nickName: "张三",
+    roles: [{ role: 2, roleName: "普通用户" }],
+  },
+  {
+    id: 8,
+    nickName: "赵六",
+    roles: [{ role: 2, roleName: "普通用户" }],
+  },
+  {
+    id: 9,
+    nickName: "陈七",
+    roles: [{ role: 2, roleName: "普通用户" }],
+  },
+  {
+    id: 10,
+    nickName: "朱十",
+    roles: [
+      { role: 1, roleName: "管理员" },
+      { role: 2, roleName: "普通用户" },
+    ],
+  },
+  {
+    id: 11,
+    nickName: "刘八",
+    roles: [{ role: 2, roleName: "普通用户" }],
+  },
+  {
+    id: 12,
+    nickName: "朱十",
+    roles: [{ role: 2, roleName: "普通用户" }],
+  },
+  {
+    id: 13,
+    nickName: "陈七",
+    roles: [{ role: 2, roleName: "普通用户" }],
+  },
+  {
+    id: 14,
+    nickName: "李四",
+    roles: [{ role: 2, roleName: "普通用户" }],
+  },
+  {
+    id: 15,
+    nickName: "张三",
+    roles: [{ role: 2, roleName: "普通用户" }],
+  },
+  {
+    id: 16,
+    nickName: "朱十",
+    roles: [{ role: 2, roleName: "普通用户" }],
+  },
+  {
+    id: 17,
+    nickName: "林十二",
+    roles: [{ role: 2, roleName: "普通用户" }],
+  },
+  {
+    id: 18,
+    nickName: "张三",
+    roles: [{ role: 2, roleName: "普通用户" }],
+  },
+  {
+    id: 19,
+    nickName: "李四",
+    roles: [{ role: 2, roleName: "普通用户" }],
+  },
+  {
+    id: 20,
+    nickName: "王五",
+    roles: [{ role: 2, roleName: "普通用户" }],
+  },
+  {
+    id: 21,
+    nickName: "小刘",
+    roles: [{ role: 2, roleName: "普通用户" }],
+  },
+  {
+    id: 22,
+    nickName: "王五",
+    roles: [{ role: 2, roleName: "普通用户" }],
+  },
+];
+
+// const getRandomRoles = (
+//   length: number,
+//   min: number,
+//   max: number,
+// ): Array<number> => {
+//   const randomArray = new Array<number>();
+//   for (let i = 0; i < length; i++) {
+//     const randomNumber = Math.floor(Math.random() * (max - min) + min);
+//     randomArray.push(randomNumber);
+//   }
+
+//   return Array.from(new Set(randomArray));
+// };
+
 export default [
   {
     // 前面的 /mock 为 mock 生效需要配置的根路径 后面会提到
@@ -42,6 +179,22 @@ export default [
           },
         };
       }
+    },
+  },
+  {
+    // 前面的 /mock 为 mock 生效需要配置的根路径 后面会提到
+    url: "/mock/api/getUserList",
+    method: "get",
+    // 使用 body 可以获取请求体
+    response: ({ query }) => {
+      //TODO 筛选功能
+      //TODO 分页功能
+      console.log("-----", query);
+      return {
+        code: 0,
+        message: "success",
+        data: STATIC_USER_LIST,
+      };
     },
   },
 ] as MockMethod[];
