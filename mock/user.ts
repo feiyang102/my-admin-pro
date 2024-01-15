@@ -226,6 +226,31 @@ export default [
     },
   },
   {
+    url: "/mock/api/userCreate",
+    method: "post",
+    response: ({ body }) => {
+      const { id, nickName, roles } = body;
+      console.log("id", id);
+      let maxItem = STATIC_USER_LIST[0];
+      STATIC_USER_LIST.forEach((item) => {
+        if (maxItem.id < item.id) {
+          maxItem = item;
+        }
+      });
+      const user = {
+        id: maxItem.id + 1,
+        nickName: nickName,
+        roles: roles,
+      };
+      STATIC_USER_LIST.push(user);
+      return {
+        code: 0,
+        message: "success",
+        data: {},
+      };
+    },
+  },
+  {
     url: "/mock/api/userEdit",
     method: "post",
     response: ({ body }) => {

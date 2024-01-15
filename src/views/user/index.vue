@@ -20,6 +20,9 @@
       </el-form-item>
     </el-form>
   </div>
+  <div class="user_operation">
+    <el-button type="success" @click="handleCreate">新建用户</el-button>
+  </div>
   <div class="user_table">
     <el-table :data="tableData" border style="width: 100%">
       <el-table-column prop="id" label="会员ID" width="80" />
@@ -94,7 +97,7 @@
 
 <script lang="ts" setup>
 import { ref, reactive, onMounted } from "vue";
-import { userList, userEdit } from "@/api/user";
+import { userList, userCreate, userEdit } from "@/api/user";
 import { roleList } from "@/api/role";
 import { IUserListItem, IUserQuery } from "#/user";
 import { IRoleListItem } from "#/role";
@@ -156,8 +159,17 @@ const dialogForm = reactive({
   roles: [],
 });
 const dialogFormRef = ref<FormInstance>();
+let dialogMode: "create" | "edit" = "create";
+
+const handleCreate = () => {
+  dialogMode = "create";
+  dialogForm.nickName = "";
+  dialogForm.roles = [];
+  dialogVisible.value = true;
+};
 
 const handleEdit = (user) => {
+  dialogMode = "edit";
   dialogForm.id = user.id;
   dialogForm.nickName = user.nickName;
   dialogForm.roles = user.roles.map((item) => {
@@ -170,13 +182,7 @@ const handleEdit = (user) => {
 };
 
 const handleDialogCancel = () => {
-  resetDialogForm(dialogFormRef.value);
   dialogVisible.value = false;
-};
-
-const resetDialogForm = (formEl: FormInstance | undefined) => {
-  if (!formEl) return;
-  formEl.resetFields();
 };
 
 const dialogFormRules = reactive({
@@ -192,13 +198,21 @@ const handleDialogComfirm = async (formEl: FormInstance | undefined) => {
   });
   if (!validRes) return;
   const query: IUserListItem = Object.assign({}, dialogForm);
+  let res: any;
 
-  const res: any = await userEdit(query).catch((err) => {
-    ElMessage.error(`提交失败：${err}`);
-  });
+  if (dialogMode === "create") {
+    delete query.id;
+    res = await userCreate(query).catch((err) => {
+      ElMessage.error(`提交失败：${err}`);
+    });
+  } else {
+    res = await userEdit(query).catch((err) => {
+      ElMessage.error(`提交失败：${err}`);
+    });
+  }
+
   if (res.code === 0) {
     ElMessage.success("提交成功");
-    resetDialogForm(dialogFormRef.value);
     dialogVisible.value = false;
     handleSearch();
   } else {
@@ -213,6 +227,9 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.user_operation {
+  margin-bottom: 10px;
+}
 .user_table {
   .table_role {
     margin-left: 5px;

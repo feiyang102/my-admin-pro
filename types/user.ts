@@ -23,7 +23,7 @@ interface IUserItem {
 }
 
 export interface IUserListItem {
-  id: number;
+  id?: number;
   nickName: string;
   roles: IUserItem[];
 }

@@ -21,6 +21,10 @@ export const userList = async (params?: any) => {
   return get("/getUserList", params);
 };
 
+export const userCreate = async (data: IUserListItem) => {
+  return post("/userCreate", data);
+};
+
 export const userEdit = async (data: IUserListItem) => {
   return post("/userEdit", data);
 };
