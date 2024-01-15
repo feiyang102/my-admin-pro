@@ -1,9 +1,7 @@
 import { IUserQuery } from "#/user";
 import { pagerUtil } from "@/utils";
 import { MockMethod } from "vite-plugin-mock";
-import { useMock } from "./common";
 
-const userMock = useMock("user");
 const STATIC_USER_LIST = [
   {
     id: 1,
@@ -125,7 +123,6 @@ const STATIC_USER_LIST = [
     roles: [{ roleId: 2, roleName: "普通用户" }],
   },
 ];
-userMock?.set("userList", STATIC_USER_LIST);
 
 // const getRandomRoles = (
 //   length: number,
