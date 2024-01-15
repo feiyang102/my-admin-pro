@@ -1,4 +1,6 @@
 import { MockMethod } from "vite-plugin-mock";
+import { useMock } from "./common";
+const userMock = useMock("user");
 
 export default [
   {
@@ -7,6 +9,7 @@ export default [
     method: "get",
     // 使用 body 可以获取请求体
     response: () => {
+      console.log(userMock?.get("userList"));
       return {
         code: 0,
         message: "success",
