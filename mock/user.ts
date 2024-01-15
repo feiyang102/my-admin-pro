@@ -6,121 +6,121 @@ const STATIC_USER_LIST = [
   {
     id: 1,
     nickName: "许九",
-    roles: [{ role: 2, roleName: "普通用户" }],
+    roles: [{ roleId: 2, roleName: "普通用户" }],
   },
   {
     id: 2,
     nickName: "刘八",
-    roles: [{ role: 2, roleName: "普通用户" }],
+    roles: [{ roleId: 2, roleName: "普通用户" }],
   },
   {
     id: 3,
     nickName: "赵六",
     roles: [
-      { role: 1, roleName: "管理员" },
-      { role: 2, roleName: "普通用户" },
+      { roleId: 1, roleName: "管理员" },
+      { roleId: 2, roleName: "普通用户" },
     ],
   },
   {
     id: 4,
     nickName: "王五",
-    roles: [{ role: 2, roleName: "普通用户" }],
+    roles: [{ roleId: 2, roleName: "普通用户" }],
   },
   {
     id: 5,
     nickName: "许九",
     roles: [
-      { role: 1, roleName: "管理员" },
-      { role: 2, roleName: "普通用户" },
+      { roleId: 1, roleName: "管理员" },
+      { roleId: 2, roleName: "普通用户" },
     ],
   },
   {
     id: 6,
     nickName: "赵六",
-    roles: [{ role: 2, roleName: "普通用户" }],
+    roles: [{ roleId: 2, roleName: "普通用户" }],
   },
   {
     id: 7,
     nickName: "张三",
-    roles: [{ role: 2, roleName: "普通用户" }],
+    roles: [{ roleId: 2, roleName: "普通用户" }],
   },
   {
     id: 8,
     nickName: "赵六",
-    roles: [{ role: 2, roleName: "普通用户" }],
+    roles: [{ roleId: 2, roleName: "普通用户" }],
   },
   {
     id: 9,
     nickName: "陈七",
-    roles: [{ role: 2, roleName: "普通用户" }],
+    roles: [{ roleId: 2, roleName: "普通用户" }],
   },
   {
     id: 10,
     nickName: "朱十",
     roles: [
-      { role: 1, roleName: "管理员" },
-      { role: 2, roleName: "普通用户" },
+      { roleId: 1, roleName: "管理员" },
+      { roleId: 2, roleName: "普通用户" },
     ],
   },
   {
     id: 11,
     nickName: "刘八",
-    roles: [{ role: 2, roleName: "普通用户" }],
+    roles: [{ roleId: 2, roleName: "普通用户" }],
   },
   {
     id: 12,
     nickName: "朱十",
-    roles: [{ role: 2, roleName: "普通用户" }],
+    roles: [{ roleId: 2, roleName: "普通用户" }],
   },
   {
     id: 13,
     nickName: "陈七",
-    roles: [{ role: 2, roleName: "普通用户" }],
+    roles: [{ roleId: 2, roleName: "普通用户" }],
   },
   {
     id: 14,
     nickName: "李四",
-    roles: [{ role: 2, roleName: "普通用户" }],
+    roles: [{ roleId: 2, roleName: "普通用户" }],
   },
   {
     id: 15,
     nickName: "张三",
-    roles: [{ role: 2, roleName: "普通用户" }],
+    roles: [{ roleId: 2, roleName: "普通用户" }],
   },
   {
     id: 16,
     nickName: "朱十",
-    roles: [{ role: 2, roleName: "普通用户" }],
+    roles: [{ roleId: 2, roleName: "普通用户" }],
   },
   {
     id: 17,
     nickName: "林十二",
-    roles: [{ role: 2, roleName: "普通用户" }],
+    roles: [{ roleId: 2, roleName: "普通用户" }],
   },
   {
     id: 18,
     nickName: "张三",
-    roles: [{ role: 2, roleName: "普通用户" }],
+    roles: [{ roleId: 2, roleName: "普通用户" }],
   },
   {
     id: 19,
     nickName: "李四",
-    roles: [{ role: 2, roleName: "普通用户" }],
+    roles: [{ roleId: 2, roleName: "普通用户" }],
   },
   {
     id: 20,
     nickName: "王五",
-    roles: [{ role: 2, roleName: "普通用户" }],
+    roles: [{ roleId: 2, roleName: "普通用户" }],
   },
   {
     id: 21,
     nickName: "小刘",
-    roles: [{ role: 2, roleName: "普通用户" }],
+    roles: [{ roleId: 2, roleName: "普通用户" }],
   },
   {
     id: 22,
     nickName: "王五",
-    roles: [{ role: 2, roleName: "普通用户" }],
+    roles: [{ roleId: 2, roleName: "普通用户" }],
   },
 ];
 
@@ -184,10 +184,8 @@ export default [
     },
   },
   {
-    // 前面的 /mock 为 mock 生效需要配置的根路径 后面会提到
     url: "/mock/api/getUserList",
     method: "get",
-    // 使用 body 可以获取请求体
     response: ({ query }) => {
       const {
         pageNumber,
@@ -202,9 +200,10 @@ export default [
       }
       if (roleId && roleId != "0") {
         const role = Number(roleId);
+
         list = list.filter((item) => {
           for (let i = 0; i < item.roles.length; i++) {
-            if (item.roles[i]["role"] === role) {
+            if (item.roles[i]["roleId"] === role) {
               return true;
             }
           }
@@ -215,8 +214,6 @@ export default [
       const total = list.length;
       // 分页
       const { beginIndex, endIndex } = pagerUtil(pageNumber, pageSize);
-      console.log(`begin: ${beginIndex}, end: ${endIndex}`);
-
       list = list.slice(beginIndex, endIndex);
       return {
         code: 0,
@@ -225,6 +222,25 @@ export default [
           list: list,
           total,
         },
+      };
+    },
+  },
+  {
+    url: "/mock/api/userEdit",
+    method: "post",
+    response: ({ body }) => {
+      const { id, nickName, roles } = body;
+      STATIC_USER_LIST.forEach((item) => {
+        if (item.id === id) {
+          item.nickName = nickName;
+          item.roles = roles;
+        }
+      });
+
+      return {
+        code: 0,
+        message: "success",
+        data: {},
       };
     },
   },

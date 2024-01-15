@@ -52,14 +52,53 @@
       @current-change="handleCurrentChange"
     />
   </div>
+  <div class="user_edit">
+    <el-dialog v-model="dialogVisible">
+      <el-form :model="dialogForm" ref="dialogFormRef" :rules="dialogFormRules">
+        <el-form-item label="用户名称" label-width="140px" prop="nickName">
+          <el-input
+            v-model="dialogForm.nickName"
+            placeholder="请选择用户名称"
+            autocomplete="off"
+          />
+        </el-form-item>
+        <el-form-item label="用户角色" label-width="140px" prop="roles">
+          <el-select
+            v-model="dialogForm.roles"
+            value-key="roleId"
+            multiple
+            clearable
+            placeholder="请选择用户角色"
+          >
+            <el-option
+              v-for="item in rolesData"
+              :label="item.roleName"
+              :value="item"
+              :key="item.roleId"
+              >{{ item.roleName }}</el-option
+            >
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="handleDialogCancel">取消</el-button>
+          <el-button type="primary" @click="handleDialogComfirm(dialogFormRef)">
+            提交
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, reactive, onMounted } from "vue";
-import { userList } from "@/api/user";
+import { userList, userEdit } from "@/api/user";
 import { roleList } from "@/api/role";
 import { IUserListItem, IUserQuery } from "#/user";
 import { IRoleListItem } from "#/role";
+import { ElMessage, FormInstance } from "element-plus";
 
 const rolesData = ref<IRoleListItem[]>([]);
 const queryData = reactive<IUserQuery>({
@@ -109,8 +148,62 @@ const handleCurrentChange = (index) => {
   handleSearch();
 };
 
+// 编辑弹窗相关
+const dialogVisible = ref(false);
+const dialogForm = reactive({
+  id: 0,
+  nickName: "",
+  roles: [],
+});
+const dialogFormRef = ref<FormInstance>();
+
 const handleEdit = (user) => {
-  console.log(user);
+  dialogForm.id = user.id;
+  dialogForm.nickName = user.nickName;
+  dialogForm.roles = user.roles.map((item) => {
+    return {
+      roleId: item.roleId,
+      roleName: item.roleName,
+    };
+  });
+  dialogVisible.value = true;
+};
+
+const handleDialogCancel = () => {
+  resetDialogForm(dialogFormRef.value);
+  dialogVisible.value = false;
+};
+
+const resetDialogForm = (formEl: FormInstance | undefined) => {
+  if (!formEl) return;
+  formEl.resetFields();
+};
+
+const dialogFormRules = reactive({
+  nickName: [{ required: true, trigger: "blur", message: "请输入用户名称" }],
+  roles: [{ required: true, trigger: "change", message: "请选择角色" }],
+});
+
+const handleDialogComfirm = async (formEl: FormInstance | undefined) => {
+  if (!formEl) return;
+  let validRes = false;
+  await formEl.validate((valid) => {
+    validRes = valid;
+  });
+  if (!validRes) return;
+  const query: IUserListItem = Object.assign({}, dialogForm);
+
+  const res: any = await userEdit(query).catch((err) => {
+    ElMessage.error(`提交失败：${err}`);
+  });
+  if (res.code === 0) {
+    ElMessage.success("提交成功");
+    resetDialogForm(dialogFormRef.value);
+    dialogVisible.value = false;
+    handleSearch();
+  } else {
+    ElMessage.error(`提交失败：${res.message}`);
+  }
 };
 
 onMounted(async () => {
@@ -124,5 +217,8 @@ onMounted(async () => {
   .table_role {
     margin-left: 5px;
   }
+}
+.user_pagination {
+  margin-top: 15px;
 }
 </style>
