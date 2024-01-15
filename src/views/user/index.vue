@@ -56,7 +56,7 @@
     />
   </div>
   <div class="user_edit">
-    <el-dialog v-model="dialogVisible">
+    <el-dialog v-model="dialogVisible" v-if="dialogVisible">
       <el-form :model="dialogForm" ref="dialogFormRef" :rules="dialogFormRules">
         <el-form-item label="用户名称" label-width="140px" prop="nickName">
           <el-input
