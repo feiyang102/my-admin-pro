@@ -1,6 +1,6 @@
 <template>
   <div class="user_header">
-    <el-form inline :model="queryData">
+    <el-form inline :model="queryData" @submit.prevent>
       <el-form-item label="用户名称">
         <el-input v-model="queryData.nickName" placeholder="请输入用户名称" />
       </el-form-item>
@@ -37,8 +37,12 @@
 
       <el-table-column label="操作">
         <template #default="scope">
-          <el-button size="small" type="primary" @click="handleEdit(scope.row)"
-            >Edit</el-button
+          <el-button
+            link
+            size="small"
+            type="primary"
+            @click="handleEdit(scope.row)"
+            >编辑</el-button
           >
         </template>
       </el-table-column>

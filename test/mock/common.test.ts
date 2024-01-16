@@ -47,8 +47,12 @@ describe("mock/common", () => {
       expect(list[4]).toEqual({ id: 5, name: "test-5" });
     });
     test("getTableInstance remove 测试通过", () => {
-      const list: any = instance.remove("id", 5);
-      expect(list[4]).toEqual(undefined);
+      let list = instance.findList() || [];
+      const len: number = list?.length || 0;
+      const id = list[len - 1]?.id || -1;
+      instance.remove("id", id);
+      list = instance.findList() || [];
+      expect(list[len - 1]).toEqual(undefined);
     });
   });
 });

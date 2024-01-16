@@ -26,6 +26,8 @@ interface IMockTableInstance {
  * 将 mock 数据作为全局数据共享
  *
  * 在每个组件里可以通过该方法获取独立的变量空间
+ *
+ * 注意：全局共享的数据没有持久化，每次热更新数据都会被初始化
  * */
 export function useMock(space: string) {
   if (!GLOBAL.ThisMock[space]) {
@@ -41,19 +43,22 @@ export function useMock(space: string) {
     keyName: string,
     keyList: Array<any> | null | undefined,
   ) {
-    // 在变量空间中设置变量，类似 类似 localstorage.set
-    const set = function (data: any = null) {
-      GLOBAL.ThisMock[space][keyName] = data;
-    };
-
     const obj = {} as IMockTableInstance;
-    if (keyList) set(keyList);
+    if (keyList) {
+      GLOBAL.ThisMock[space][keyName] = keyList;
+    }
 
     let thisList: Array<any> = GLOBAL.ThisMock[space][keyName];
     if (!thisList) {
       thisList = [];
       GLOBAL.ThisMock[space][keyName] = thisList;
     }
+
+    // 在变量空间中设置变量，类似 localstorage.set
+    const setNewList = function (data: any = null) {
+      GLOBAL.ThisMock[space][keyName] = data;
+      thisList = data;
+    };
 
     // findOne
     obj.findOne = function (key: string, value: any) {
@@ -100,10 +105,11 @@ export function useMock(space: string) {
     // TODO 可以考虑增加批量删除功能
     obj.remove = function (key: string, value: any) {
       const newList = thisList.filter((item) => {
-        return item[key] !== value;
+        return item[key] != value;
       });
+      console.log(newList);
       // 重新将的全局列表放入全局变量中
-      set(newList);
+      setNewList(newList);
       return true;
     };
 
