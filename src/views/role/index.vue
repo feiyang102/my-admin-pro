@@ -71,13 +71,26 @@
         </span>
       </template>
     </el-dialog>
+    <el-dialog v-model="dialogAuth.visible" v-if="dialogAuth.visible">
+      <AuthTree />
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogAuth.handleCancel">取消</el-button>
+          <el-button type="primary" @click="dialogAuth.handleComfirm()">
+            提交
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, reactive, onMounted } from "vue";
-import { FormInstance, ElMessage } from "element-plus";
+import { FormInstance, ElMessage, ElMessageBox } from "element-plus";
 import { roleList, roleAdd, roleUpdate, roleRemove } from "@/api/role";
+import AuthTree from "@/components/auth/AuthTree.vue";
+
 const tableData = ref();
 
 const handleSearch = async () => {
@@ -92,14 +105,27 @@ const handleAdd = () => {
 };
 const handleRemove = async (role: any) => {
   const query = { roleId: role.roleId };
-  const res: any = await roleRemove(query);
-  ElMessage.success(res.data.message);
-  handleSearch();
+  ElMessageBox.confirm("确定删除吗？", "", {
+    distinguishCancelAndClose: true,
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+  })
+    .then(() => {
+      roleRemove(query)
+        .then(() => {
+          ElMessage.success("删除成功");
+          handleSearch();
+        })
+        .catch((err) => {
+          ElMessage.success(`删除失败：${err}`);
+        });
+    })
+    .catch(() => console.log("取消删除"));
 };
 
 // 编辑角色
 const dialogRoleRef = ref<FormInstance>();
-//TODO 该对象不是全部都要响应式！
+//TODO 优化 该对象不是全部都要响应式
 const dialogRole = reactive({
   isAdd: true,
   visible: false,
@@ -159,25 +185,25 @@ const handleEditRole = (role: any) => {
 };
 
 // 编辑角色权限
-// const dialogAuthRef = ref<FormInstance>();
-// const dialogAuth = reactive({
-//   isAdd: true,
-//   visible: false,
-//   form: {},
-//   rules: {},
-//   handleCancel: (el: FormInstance | undefined) => {
-//     console.log(el);
-//   },
-//   handleComfirm: (el: FormInstance | undefined) => {
-//     console.log(el);
-//   },
-// });
 
-// const dialogVisible = ref(false);
-// const dialogForm = ref();
-// const dialogFormRef = ref();
+//TODO 该对象不是全部都要响应式！
+const dialogAuth = reactive({
+  visible: false,
+  form: {
+    roleId: 0,
+    roleName: "",
+  },
+  handleCancel: () => {
+    dialogAuth.visible = false;
+  },
+  handleComfirm: async () => {
+    console.log("comfirm");
+  },
+});
 const handleEditAuth = (role: any) => {
+  // TODO 标题头部需要标注用户名称: 管理员权限修改
   console.log(role);
+  dialogAuth.visible = true;
 };
 
 onMounted(() => {

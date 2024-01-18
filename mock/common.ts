@@ -125,6 +125,7 @@ export function useMock(space: string) {
 
     // 返回自增ID
     obj.getNewId = function (idKey: string): number {
+      if (thisList.length === 0) return 1;
       const maxId = Math.max(...thisList.map((item) => item[idKey]));
       return maxId + 1;
     };
