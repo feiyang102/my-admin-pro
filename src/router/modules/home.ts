@@ -45,15 +45,5 @@ export default {
       },
       children: [],
     },
-    {
-      path: "/auth",
-      name: "AuthPage",
-      component: () => import("@/views/auth/index.vue"),
-      meta: {
-        title: "权限管理",
-        isShow: true,
-      },
-      children: [],
-    },
   ],
 };

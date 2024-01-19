@@ -29,6 +29,7 @@ declare module "vue" {
     ElTableColumn: (typeof import("element-plus/es"))["ElTableColumn"];
     ElTableItem: (typeof import("element-plus/es"))["ElTableItem"];
     ElTag: (typeof import("element-plus/es"))["ElTag"];
+    ElTree: (typeof import("element-plus/es"))["ElTree"];
     IEpUser: (typeof import("~icons/ep/user"))["default"];
     RouterLink: (typeof import("vue-router"))["RouterLink"];
     RouterView: (typeof import("vue-router"))["RouterView"];

@@ -72,7 +72,11 @@
       </template>
     </el-dialog>
     <el-dialog v-model="dialogAuth.visible" v-if="dialogAuth.visible">
-      <AuthTree />
+      <AuthTree
+        ref="authTreeRef"
+        :roles="dialogAuth.form.authority"
+        :name="dialogAuth.form.roleName"
+      />
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="dialogAuth.handleCancel">取消</el-button>
@@ -89,7 +93,7 @@
 import { ref, reactive, onMounted } from "vue";
 import { FormInstance, ElMessage, ElMessageBox } from "element-plus";
 import { roleList, roleAdd, roleUpdate, roleRemove } from "@/api/role";
-import AuthTree from "@/components/auth/AuthTree.vue";
+import AuthTree from "@/components/AuthTree.vue";
 
 const tableData = ref();
 
@@ -186,23 +190,41 @@ const handleEditRole = (role: any) => {
 
 // 编辑角色权限
 
+const authTreeRef = ref<any>(null);
 //TODO 该对象不是全部都要响应式！
 const dialogAuth = reactive({
   visible: false,
   form: {
     roleId: 0,
     roleName: "",
+    authority: [],
   },
   handleCancel: () => {
+    dialogAuth.form.roleId = 0;
+    dialogAuth.form.roleName = "";
+    dialogAuth.form.authority = [];
     dialogAuth.visible = false;
   },
   handleComfirm: async () => {
-    console.log("comfirm");
+    const authority = authTreeRef.value.getCheckedKeys();
+    const data = {
+      roleId: dialogAuth.form.roleId,
+      authority: authority,
+    };
+    const res: any = await roleUpdate(data);
+    if (res.data?.result) {
+      ElMessage.success("修改成功");
+      dialogAuth.visible = false;
+      handleSearch();
+    } else {
+      ElMessage.error("修改失败");
+    }
   },
 });
 const handleEditAuth = (role: any) => {
-  // TODO 标题头部需要标注用户名称: 管理员权限修改
-  console.log(role);
+  dialogAuth.form.authority = role.authority || [];
+  dialogAuth.form.roleId = role.roleId;
+  dialogAuth.form.roleName = role.roleName;
   dialogAuth.visible = true;
 };
 

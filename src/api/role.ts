@@ -15,7 +15,3 @@ export const roleUpdate = async (data: any) => {
 export const roleRemove = async (data: any) => {
   return post("/roleRemove", data);
 };
-
-export const roleAuthUpdate = async (data: any) => {
-  return post("/roleAuthUpdate", data);
-};
