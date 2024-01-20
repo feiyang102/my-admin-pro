@@ -29,11 +29,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive } from "vue";
 import { FormInstance } from "element-plus";
 import { User, Lock } from "@element-plus/icons-vue";
 import { useUserStore } from "@/store/user";
-import { useRouter } from "vue-router";
 
 const userStore = useUserStore();
 const router = useRouter();

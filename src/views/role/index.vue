@@ -90,7 +90,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, onMounted } from "vue";
 import { FormInstance, ElMessage, ElMessageBox } from "element-plus";
 import { roleList, roleAdd, roleUpdate, roleRemove } from "@/api/role";
 import AuthTree from "@/components/AuthTree.vue";

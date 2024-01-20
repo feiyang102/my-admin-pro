@@ -70,9 +70,28 @@ declare global {
   const useLink: (typeof import("vue-router"))["useLink"];
   const useRoute: (typeof import("vue-router"))["useRoute"];
   const useRouter: (typeof import("vue-router"))["useRouter"];
+  const useRouter: (typeof import("vue-router"))["RouteRecordRaw"];
   const useSlots: (typeof import("vue"))["useSlots"];
   const watch: (typeof import("vue"))["watch"];
   const watchEffect: (typeof import("vue"))["watchEffect"];
   const watchPostEffect: (typeof import("vue"))["watchPostEffect"];
   const watchSyncEffect: (typeof import("vue"))["watchSyncEffect"];
+}
+// for type re-export
+declare global {
+  // @ts-ignore
+  export type {
+    Component,
+    ComponentPublicInstance,
+    ComputedRef,
+    ExtractDefaultPropTypes,
+    ExtractPropTypes,
+    ExtractPublicPropTypes,
+    InjectionKey,
+    PropType,
+    Ref,
+    VNode,
+    WritableComputedRef,
+  } from "vue";
+  import("vue");
 }

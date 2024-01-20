@@ -1,5 +1,3 @@
-import { defineStore } from "pinia";
-import { ref } from "vue";
 import { authTree } from "@/api/auth";
 
 export const useAuthStore = defineStore("auth", () => {

@@ -14,7 +14,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, defineProps, defineExpose } from "vue";
 import { useAuthStore } from "@/store/auth";
 const authStore = useAuthStore();
 

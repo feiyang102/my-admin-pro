@@ -43,7 +43,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from "vue";
 import { projectList } from "@/api/project";
 import { ElMessage } from "element-plus";
 import { IProjectItem, IProjectQuery } from "#/project";

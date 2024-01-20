@@ -100,7 +100,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, onMounted } from "vue";
 import { userList, userCreate, userEdit } from "@/api/user";
 import { roleList } from "@/api/role";
 import { IUserListItem, IUserQuery } from "#/user";
