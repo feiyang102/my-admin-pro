@@ -1,9 +1,14 @@
 <template>
   <div class="wrap-about">about</div>
+  <el-form ref="formRef"></el-form>
 </template>
 
 <script lang="ts" setup>
-// import { reactive, toRefs, ref, onBeforeMount, onMounted } from "vue";
+import { useCompRef } from "@/hooks/useCompRef";
+import { ElForm } from "element-plus";
+
+const formRef = useCompRef<typeof ElForm>();
+console.log(formRef);
 </script>
 
 <style lang="less" scoped>

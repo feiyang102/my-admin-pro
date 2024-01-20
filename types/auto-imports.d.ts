@@ -70,7 +70,6 @@ declare global {
   const useLink: (typeof import("vue-router"))["useLink"];
   const useRoute: (typeof import("vue-router"))["useRoute"];
   const useRouter: (typeof import("vue-router"))["useRouter"];
-  const useRouter: (typeof import("vue-router"))["RouteRecordRaw"];
   const useSlots: (typeof import("vue"))["useSlots"];
   const watch: (typeof import("vue"))["watch"];
   const watchEffect: (typeof import("vue"))["watchEffect"];
