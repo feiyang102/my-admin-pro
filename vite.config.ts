@@ -44,8 +44,6 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       ElementPlus({ defaultLocale: "zh-cn" }),
       // 自动导入组件
       AutoImport({
-        // 定义需要自动引入的框架
-        imports: ["vue", "vue-router", "pinia"],
         // 处理eslint
         eslintrc: {
           enabled: true,
