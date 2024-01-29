@@ -33,7 +33,7 @@ module.exports = {
     "vue/multi-word-component-names": [
       "error",
       {
-        ignores: ["index", "Header", "tag", "Tag"], //需要忽略的组件名
+        ignores: ["index", "Header", "tag", "Tag", "Breadcrumb"], //需要忽略的组件名
       },
     ],
   },

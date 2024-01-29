@@ -21,6 +21,7 @@
         </el-menu>
       </el-aside>
       <el-main class="layout_main">
+        <Breadcrumb />
         <router-view></router-view>
       </el-main>
     </el-container>
@@ -30,6 +31,7 @@
 <script lang="ts" setup>
 import { useRouter, useRoute } from "vue-router";
 import Header from "./components/Header.vue";
+import Breadcrumb from "./components/Breadcrumb.vue";
 
 const router = useRouter();
 const route = useRoute();
